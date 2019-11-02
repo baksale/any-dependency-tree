@@ -1,4 +1,5 @@
-import {DependencyTreeBuilder, DependencyTreeNode, EntityDependencyApi} from '../src/index'
+import {DependencyTreeBuilder, EntityDependencyApi} from '../src/index'
+import { DependencyTreeNode } from '../src/dependencyTreeNode';
 
 /**
     Main Package:0
@@ -12,6 +13,7 @@ import {DependencyTreeBuilder, DependencyTreeNode, EntityDependencyApi} from '..
 class Package {
     constructor(public id:string, public name:string){};
 };
+
 class MockDependencyApi implements EntityDependencyApi<Package>{
     getEntityDependencies(entity: Package): Package[] {
         switch(entity.id){
