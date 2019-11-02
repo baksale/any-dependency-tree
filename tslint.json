@@ -5,7 +5,8 @@
     "rules": {
         "interface-name": false,
         "max-classes-per-file": false,
-        "array-type": [true, "generic"]
+        "array-type": [true, "generic"],
+        "curly": [true, "ignore-same-line"]
     },
     "rulesDirectory": []
 }
