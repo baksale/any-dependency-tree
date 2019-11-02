@@ -30,7 +30,7 @@ export class DependencyTreeVisitor{
     }
 
     private indentForNode(node: DependencyTreeNode<any>): Indent {
-        if(0 == node.nodeLevel) return new Indent();//no any indent/formatting for top level node
+        if(0 == node.nodeLevel) return new Indent();// no any indent/formatting for top level node
         const parentIndent = this.indentForNodeForParentLevel(node.parent);
         if(this.isLastOnLevel(node)) return new Indent(this.indentLastNodeOnLevel, parentIndent);
         else return new Indent(this.idnentForDependency, parentIndent);
