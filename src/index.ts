@@ -1,7 +1,7 @@
 export class DependencyTreeNode<T>{
-    nodeElement: T;
-    parent: DependencyTreeNode<T>;
-    children: Array<DependencyTreeNode<T>>;
+    public nodeElement: T;
+    public parent: DependencyTreeNode<T>;
+    public children: Array<DependencyTreeNode<T>>;
 }
 export interface EntityDependencyApi<T>{
     getEntityDependencies(entity: T): Array<T>;
@@ -13,7 +13,7 @@ export class DependencyTreeBuilder<T>{
     constructor (entityDependencyApi: EntityDependencyApi<T>){
         this.entityDependencyApi = entityDependencyApi;
     };
-    buildDependencyTree(entity: T): DependencyTreeNode<T> {
+    public buildDependencyTree(entity: T): DependencyTreeNode<T> {
         return this.buildTreeWithRecursion(entity, null);
     }
     private buildTreeWithRecursion(entity: T, parent: DependencyTreeNode<T>): DependencyTreeNode<T>{
