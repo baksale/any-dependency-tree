@@ -1,7 +1,7 @@
 import { DependencyTreeNode } from './dependencyTreeNode';
 
 export interface EntityDependencyApi<T> {
-  getEntityDependencies(entity: T): Array<T>;
+  getEntityDependencies(entity: T): Promise<Array<T>>;
 }
 
 export class DependencyTreeBuilder<T> {
@@ -10,16 +10,16 @@ export class DependencyTreeBuilder<T> {
   constructor(entityDependencyApi: EntityDependencyApi<T>) {
     this.entityDependencyApi = entityDependencyApi;
   }
-  public buildDependencyTree(entity: T): DependencyTreeNode<T> {
-    return this.buildTreeWithRecursion(entity, null);
+  public async buildDependencyTree(entity: T): Promise<DependencyTreeNode<T>> {
+    return await this.buildTreeWithRecursion(entity, null);
   }
-  private buildTreeWithRecursion(entity: T, parent: DependencyTreeNode<T>): DependencyTreeNode<T> {
+  private async buildTreeWithRecursion(entity: T, parent: DependencyTreeNode<T>): Promise<DependencyTreeNode<T>> {
     const result = new DependencyTreeNode<T>(entity, parent);
-    const dependencies = this.entityDependencyApi.getEntityDependencies(result.nodeElement);
+    const dependencies = await this.entityDependencyApi.getEntityDependencies(result.nodeElement);
     const children = new Array<DependencyTreeNode<T>>();
-    dependencies.forEach(dependency => {
-      children.push(this.buildTreeWithRecursion(dependency, result));
-    });
+    for( let dependency of dependencies){
+      children.push(await this.buildTreeWithRecursion(dependency, result));
+    }
     result.children = children;
     return result;
   }

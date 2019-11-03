@@ -15,7 +15,7 @@ class Package {
 };
 
 class MockDependencyApi implements EntityDependencyApi<Package>{
-    getEntityDependencies(entity: Package): Package[] {
+    async getEntityDependencies(entity: Package): Promise<Package[]> {
         switch(entity.id){
             case '0': return [new Package('A', '1st Level Pacakge 1'), new Package('B', '1st Level Pacakge 2')];
             case 'A': return [new Package('C', '2nd Level Package 1'), new Package('D', '2nd Level Package 2'), new Package('E', '2nd Level Package 3')];
@@ -29,9 +29,9 @@ class MockDependencyApi implements EntityDependencyApi<Package>{
 }
 const dependencyTreeBuilder = new DependencyTreeBuilder<Package>(new MockDependencyApi());
 
-it('builds dependency tree', () => {
+it('builds dependency tree', async () => {
     const mainPackage = new Package('0', 'Main Package');
-    const rootNode: DependencyTreeNode<Package> = dependencyTreeBuilder.buildDependencyTree(mainPackage);
+    const rootNode: DependencyTreeNode<Package> = await dependencyTreeBuilder.buildDependencyTree(mainPackage);
     expect(rootNode.nodeElement).toEqual(mainPackage);
     expect(rootNode.children.length).toEqual(2);
     expect(rootNode.children[0].nodeElement).toEqual(new Package('A', '1st Level Pacakge 1'));
