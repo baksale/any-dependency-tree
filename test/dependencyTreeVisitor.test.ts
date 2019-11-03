@@ -20,7 +20,7 @@ const l2p1 = new Package('2.1', '2nd Level Dependency p#1');
 it('top level node to display the node\'s internals', () => {
     const singleNode = new DependencyTreeNode<Package>(topNodePackage, null);
 
-    expect(visitor.visit(singleNode)).toEqual(topNodePackage.name);
+    expect(visitor.visitNode(singleNode)).toEqual(topNodePackage.name);
 });
 
 it('last dependency on the level indent to be "\\- "', () => {
@@ -29,8 +29,8 @@ it('last dependency on the level indent to be "\\- "', () => {
     const d12 = new DependencyTreeNode<Package>(l1p2, topNode);
     const d21= new DependencyTreeNode<Package>(l2p1, d11);
 
-    expect(visitor.visit(d21)).toEqual(`|  \\- ${l2p1.name}`);
-    expect(visitor.visit(d12)).toEqual(`\\- ${l1p2.name}`);
+    expect(visitor.visitNode(d21)).toEqual(`|  \\- ${l2p1.name}`);
+    expect(visitor.visitNode(d12)).toEqual(`\\- ${l1p2.name}`);
 });
 
 it('non-last dependency on the level indent to be "+- "', () => {
@@ -38,7 +38,7 @@ it('non-last dependency on the level indent to be "+- "', () => {
     const d11 = new DependencyTreeNode<Package>(l1p1, topNode);
     new DependencyTreeNode<Package>(l1p2, topNode);//add one more to parent for the previous node to be non-last
 
-    expect(visitor.visit(d11)).toEqual(`+- ${l1p1.name}`);
+    expect(visitor.visitNode(d11)).toEqual(`+- ${l1p1.name}`);
 });
 
 it('parent is non-last dependency on the parent level indent to be prefixd with "|  "', () => {
@@ -47,5 +47,5 @@ it('parent is non-last dependency on the parent level indent to be prefixd with 
     const d21 = new DependencyTreeNode<Package>(l2p1, d11);
     new DependencyTreeNode<Package>(l1p2, topNode);//add one more to parent for the previous node to be non-last
 
-    expect(visitor.visit(d21)).toEqual(`|  \\- ${l2p1.name}`);
+    expect(visitor.visitNode(d21)).toEqual(`|  \\- ${l2p1.name}`);
 });

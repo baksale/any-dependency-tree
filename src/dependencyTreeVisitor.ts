@@ -22,7 +22,15 @@ export class DependencyTreeVisitor {
   constructor(serializer: Serializer<any>) {
     this.serializer = serializer;
   }
-  public visit(node: DependencyTreeNode<any>): string {
+  public visitTree(node: DependencyTreeNode<any>): string{
+    let result: string = '';
+    result += this.visitNode(node) + '\n';
+    node.children.forEach(childNode =>{
+      result += this.visitTree(childNode);
+    });
+    return result;
+  }
+  public visitNode(node: DependencyTreeNode<any>): string {
     let finalResult: string = '';
     finalResult += this.indentForNode(node).toString();
     finalResult += this.serializer.serialize(node.nodeElement);
