@@ -18,7 +18,7 @@ export class DependencyTreeBuilder<T> {
     const dependencies = await this.entityDependencyApi.getEntityDependencies(result.nodeElement);
     const children = new Array<DependencyTreeNode<T>>();
     let dependency: T;
-    for(dependency of dependencies){
+    for (dependency of dependencies) {
       children.push(await this.buildTreeWithRecursion(dependency, result));
     }
     result.children = children;
