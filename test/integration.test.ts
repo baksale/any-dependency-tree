@@ -43,14 +43,15 @@ multi-level final test      +- 1.1
     const d31X = new DependencyTreeNode<Package>(l3p1, d22X);
     const d32X = new DependencyTreeNode<Package>(l3p2, d22X);
 
-    expect(visitor.visit(d11)).toEqual(`+- ${l1p1.name}`);
-    expect(visitor.visit(d21)).toEqual(`|  +- ${l2p1.name}`);
-    expect(visitor.visit(d22)).toEqual(`|  +- ${l2p2.name}`);
-    expect(visitor.visit(d31)).toEqual(`|  |  +- ${l3p1.name}`);
-    expect(visitor.visit(d32)).toEqual(`|  |  \\- ${l3p2.name}`);
-    expect(visitor.visit(d23)).toEqual(`|  \\- ${l2p3.name}`);
-    expect(visitor.visit(d12)).toEqual(`\\- ${l1p2.name}`);
-    expect(visitor.visit(d22X)).toEqual(`   \\- ${l2p2.name}`);
-    expect(visitor.visit(d31X)).toEqual(`      +- ${l3p1.name}`);
-    expect(visitor.visit(d32X)).toEqual(`      \\- ${l3p2.name}`);
+    expect(visitor.visitNode(d11)).toEqual(`+- ${l1p1.name}`);
+    expect(visitor.visitNode(d21)).toEqual(`|  +- ${l2p1.name}`);
+    expect(visitor.visitNode(d22)).toEqual(`|  +- ${l2p2.name}`);
+    expect(visitor.visitNode(d31)).toEqual(`|  |  +- ${l3p1.name}`);
+    expect(visitor.visitNode(d32)).toEqual(`|  |  \\- ${l3p2.name}`);
+    expect(visitor.visitNode(d23)).toEqual(`|  \\- ${l2p3.name}`);
+    expect(visitor.visitNode(d12)).toEqual(`\\- ${l1p2.name}`);
+    expect(visitor.visitNode(d22X)).toEqual(`   \\- ${l2p2.name}`);
+    expect(visitor.visitNode(d31X)).toEqual(`      +- ${l3p1.name}`);
+    expect(visitor.visitNode(d32X)).toEqual(`      \\- ${l3p2.name}`);
+
 });
