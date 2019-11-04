@@ -7,6 +7,7 @@ Install the package
 ```bash
 npm install any-depepndency-tree@latest
 ```
+## Minimal
 [Implement EntityDependencyApi](./src/index.ts#EntityDependencyApi)
 ```typescript
 import {EntityDependencyApi} from 'any-dependency-tree/dist/index'
@@ -26,6 +27,7 @@ const dependencyBuilder = new DependencyTreeBuilder<MyHierarchyElementType>(myIm
 const rootTreeNode: DependencyTreeNode<MyHierarchyElementType> = await dependencyTreeBuilder.buildDependencyTree(myRootElement);
 // now the rootTreeNode has the complete tree
 ```
+## Optional
 Can visualize the tree using standard JSON.stringify approach
 ```typescript
 import { DependencyTreeVisitor } from 'any-dependency-tree/dist/dependencyTreeNode';
@@ -43,8 +45,7 @@ serializingVisitor.serializer = customSerializer;
 const treeString: string = serializingVisitor.visitTree(rootTreeNode);
 console.log(treeString);
 ```
-
-See more examples under  
+## Examples
 1. [index.test.ts](./test/index.test.ts)
 1. [integration.test.ts](./test/integration.test.ts)
 
