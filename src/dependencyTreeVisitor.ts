@@ -10,12 +10,11 @@ export class Indent {
 
 export class DependencyTreeVisitor {
   public serializer: Serializer<any> = new DefaultSerializer();
-  
+
   private idnentForDependency: string = '+- ';
   private indentLastNodeOnLevel: string = '\\- ';
   private indentFillForParentNonLast = '|  ';
   private indentEmptyFill = '   ';
-
 
   public visitTree(node: DependencyTreeNode<any>): string {
     let result: string = '';
