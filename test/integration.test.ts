@@ -10,7 +10,8 @@ class MockSerializer implements Serializer<Package>{
     }
     
 }
-const visitor: DependencyTreeVisitor = new DependencyTreeVisitor(new MockSerializer());
+const visitor: DependencyTreeVisitor = new DependencyTreeVisitor();
+visitor.serializer = new MockSerializer();
 const topNodePackage = new Package('0', 'A');
 const l1p1 = new Package('1.1', '1st Level Dependency p#1');
 const l1p2 = new Package('1.2', '1st Level Dependency p#2');
@@ -53,5 +54,4 @@ multi-level final test      +- 1.1
     expect(visitor.visitNode(d22X)).toEqual(`   \\- ${l2p2.name}`);
     expect(visitor.visitNode(d31X)).toEqual(`      +- ${l3p1.name}`);
     expect(visitor.visitNode(d32X)).toEqual(`      \\- ${l3p2.name}`);
-
 });
