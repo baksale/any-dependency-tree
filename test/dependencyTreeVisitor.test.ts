@@ -10,7 +10,8 @@ class MockSerializer implements Serializer<Package>{
     }
     
 }
-const visitor: DependencyTreeVisitor = new DependencyTreeVisitor(new MockSerializer());
+const visitor: DependencyTreeVisitor = new DependencyTreeVisitor();
+visitor.serializer = new MockSerializer();
 
 const topNodePackage = new Package('0', 'A');
 const l1p1 = new Package('1.1', '1st Level Dependency p#1');

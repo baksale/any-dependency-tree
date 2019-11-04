@@ -1,27 +1,21 @@
 import { DependencyTreeNode } from './dependencyTreeNode';
-import { Serializer } from './serializer';
+import { DefaultSerializer, Serializer } from './serializer';
 
 export class Indent {
-  private indentIndex: number = 0;
-  public constructor(public indent: string = '', public parent: Indent = null) {
-    if (this.parent != null) this.indentIndex = this.parent.indentIndex + 1;
-  }
-  public getIndentIndex(): number {
-    return this.indentIndex;
-  }
+  public constructor(public indent: string = '', public parent: Indent = null) {}
   public toString(): string {
     return ((this.parent && this.parent.toString()) || '') + this.indent;
   }
 }
 
 export class DependencyTreeVisitor {
+  public serializer: Serializer<any> = new DefaultSerializer();
+
   private idnentForDependency: string = '+- ';
   private indentLastNodeOnLevel: string = '\\- ';
   private indentFillForParentNonLast = '|  ';
-  private serializer: Serializer<any>;
-  constructor(serializer: Serializer<any>) {
-    this.serializer = serializer;
-  }
+  private indentEmptyFill = '   ';
+
   public visitTree(node: DependencyTreeNode<any>): string {
     let result: string = '';
     result += this.visitNode(node) + '\n';
@@ -31,10 +25,10 @@ export class DependencyTreeVisitor {
     return result;
   }
   public visitNode(node: DependencyTreeNode<any>): string {
-    let finalResult: string = '';
-    finalResult += this.indentForNode(node).toString();
-    finalResult += this.serializer.serialize(node.nodeElement);
-    return finalResult;
+    let result: string = '';
+    result += this.indentForNode(node).toString();
+    result += this.serializer.serialize(node.nodeElement);
+    return result;
   }
 
   private indentForNode(node: DependencyTreeNode<any>): Indent {
@@ -48,7 +42,7 @@ export class DependencyTreeVisitor {
     if (!this.isLastOnLevel(parentNode)) {
       return new Indent(this.indentFillForParentNonLast, this.indentForNodeForParentLevel(parentNode.parent));
     } else {
-      return new Indent('   ', this.indentForNodeForParentLevel(parentNode.parent));
+      return new Indent(this.indentEmptyFill, this.indentForNodeForParentLevel(parentNode.parent));
     }
   }
   private isLastOnLevel(node: DependencyTreeNode<any>): boolean {
