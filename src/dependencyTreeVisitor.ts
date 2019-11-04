@@ -1,5 +1,5 @@
 import { DependencyTreeNode } from './dependencyTreeNode';
-import { Serializer, DefaultSerializer } from './serializer';
+import { DefaultSerializer, Serializer } from './serializer';
 
 export class Indent {
   public constructor(public indent: string = '', public parent: Indent = null) {}
@@ -9,11 +9,13 @@ export class Indent {
 }
 
 export class DependencyTreeVisitor {
+  public serializer: Serializer<any> = new DefaultSerializer();
+  
   private idnentForDependency: string = '+- ';
   private indentLastNodeOnLevel: string = '\\- ';
   private indentFillForParentNonLast = '|  ';
   private indentEmptyFill = '   ';
-  public serializer: Serializer<any> = new DefaultSerializer();
+
 
   public visitTree(node: DependencyTreeNode<any>): string {
     let result: string = '';
