@@ -1,15 +1,8 @@
 import { DependencyTreeNode } from "../src/dependencyTreeNode";
-import { Serializer } from "../src/serializer";
 import { DependencyTreeVisitor } from "../src/dependencyTreeVisitor";
-class Package {
-    constructor(public id:string, public name:string){};
-};
-class MockSerializer implements Serializer<Package>{
-    serialize(element: Package): string {
-        return element.name;
-    }
-    
-}
+
+import {MockSerializer, Package} from './lib/model'
+
 const visitor: DependencyTreeVisitor = new DependencyTreeVisitor();
 visitor.serializer = new MockSerializer();
 const topNodePackage = new Package('0', 'A');
@@ -20,6 +13,7 @@ const l2p2 = new Package('2.2', '2nd Level Dependency p#2');
 const l2p3 = new Package('2.3', '2nd Level Dependency p#3');
 const l3p1 = new Package('3.1', '3rd Level Dependency p#1');
 const l3p2 = new Package('3.2', '3rd Level Dependency p#2');
+
 it(`
 multi-level final test      +- 1.1
                             |  +- 2.1

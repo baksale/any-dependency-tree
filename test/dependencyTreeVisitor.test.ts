@@ -1,15 +1,8 @@
 import {DependencyTreeNode} from '../src/dependencyTreeNode'
-import {Serializer} from '../src/serializer'
 import {DependencyTreeVisitor} from '../src/dependencyTreeVisitor'
-class Package {
-    constructor(public id:string, public name:string){};
-};
-class MockSerializer implements Serializer<Package>{
-    serialize(element: Package): string {
-        return element.name;
-    }
-    
-}
+
+import {MockSerializer, Package} from './lib/model'
+
 const visitor: DependencyTreeVisitor = new DependencyTreeVisitor();
 visitor.serializer = new MockSerializer();
 

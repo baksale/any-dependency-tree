@@ -1,6 +1,7 @@
 import {DependencyTreeBuilder, EntityDependencyApi} from '../src/index'
 import { DependencyTreeNode } from '../src/dependencyTreeNode';
 
+import {Package} from './lib/model'
 /**
     Main Package:0
     +- 1st Level Pacakge 1:A
@@ -10,9 +11,6 @@ import { DependencyTreeNode } from '../src/dependencyTreeNode';
     | \- 2nd Level Package last:E
     +- 1st Level Pacakge 2:B
  */
-class Package {
-    constructor(public id:string, public name:string){};
-};
 
 class MockDependencyApi implements EntityDependencyApi<Package>{
     async getEntityDependencies(entity: Package): Promise<Package[]> {
