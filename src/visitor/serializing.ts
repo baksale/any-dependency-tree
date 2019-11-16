@@ -15,10 +15,10 @@ export class Serializing implements Visitor<string> {
   private indentFillForParentNonLast = '|  ';
   private indentEmptyFill = '   ';
 
-  constructor(public serializer: Serializer<any> = new DefaultSerializer(), private jsonMode: boolean = false){}
+  constructor(public serializer: Serializer<any> = new DefaultSerializer(), private jsonMode: boolean = false) {}
 
   public visitTree(rootNode: DependencyTreeNode<any>): string {
-    if(this.jsonMode){
+    if (this.jsonMode) {
       this.jsonReady(rootNode);
       return JSON.stringify(rootNode);
     }
@@ -35,7 +35,7 @@ export class Serializing implements Visitor<string> {
     result += this.serializer.serialize(node);
     return result;
   }
-  private jsonReady(treeNode: DependencyTreeNode<any>): void{
+  private jsonReady(treeNode: DependencyTreeNode<any>): void {
     treeNode.parent = null;
     treeNode.children.forEach(child => this.jsonReady(child));
   }

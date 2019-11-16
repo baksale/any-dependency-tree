@@ -1,6 +1,6 @@
 {
   "name": "any-dependency-tree",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "Build dependencies tree of any artifacts with just single interfaces to implement",
   "main": "index.js",
   "scripts": {

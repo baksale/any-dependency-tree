@@ -1,4 +1,4 @@
-import { DependencyTreeNode } from "./dependencyTreeNode";
+import { DependencyTreeNode } from './dependencyTreeNode';
 
 export interface Serializer<T> {
   serialize(element: DependencyTreeNode<T>): string;
