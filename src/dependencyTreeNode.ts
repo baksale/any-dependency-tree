@@ -3,7 +3,7 @@ export class DependencyTreeNode<T> {
   constructor(
     public nodeElement: T,
     public parent: DependencyTreeNode<T>,
-    public children: Array<DependencyTreeNode<T>> = [],
+    public children: DependencyTreeNode<T>[] = [],
   ) {
     if (null != parent) {
       this.nodeLevel = parent.nodeLevel + 1;
