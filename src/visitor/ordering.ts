@@ -1,5 +1,5 @@
-import { DependencyTreeNode } from '../dependencyTreeNode';
 import { Visitor } from '.';
+import { DependencyTreeNode } from '../dependencyTreeNode';
 
 export class Ordering implements Visitor<DependencyTreeNode<any>[]> {
   constructor(public withRootNode: boolean = true){}

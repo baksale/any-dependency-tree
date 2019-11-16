@@ -5,7 +5,7 @@
     "rules": {
         "interface-name": false,
         "max-classes-per-file": false,
-        "array-type": [true, "generic"],
+        "array-type": [true, "array"],
         "curly": [true, "ignore-same-line"],
         "triple-equals": false
     },

@@ -1,6 +1,6 @@
+import { Visitor } from '.';
 import { DependencyTreeNode } from '../dependencyTreeNode';
 import { DefaultSerializer, Serializer } from '../serializer';
-import { Visitor } from '.';
 
 export class Indent {
   public constructor(public indent: string = '', public parent: Indent = null) {}
