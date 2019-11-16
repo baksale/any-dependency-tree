@@ -1,11 +1,12 @@
 import { Serializer } from "../../src/serializer";
+import { DependencyTreeNode } from "../../src/dependencyTreeNode";
 
 export class Package {
     constructor(public id:string, public name:string){};
 }
-export class MockSerializer implements Serializer<Package>{
-    serialize(element: Package): string {
-        return element.name;
+export class PackageSerializer implements Serializer<Package>{
+    serialize(element: DependencyTreeNode<Package>): string {
+        return element.nodeElement.name;
     }
     
 }

@@ -1,5 +1,6 @@
-import { DependencyTreeNode } from './dependencyTreeNode';
-import { DefaultSerializer, Serializer } from './serializer';
+import { DependencyTreeNode } from '../dependencyTreeNode';
+import { DefaultSerializer, Serializer } from '../serializer';
+import { Visitor } from '.';
 
 export class Indent {
   public constructor(public indent: string = '', public parent: Indent = null) {}
@@ -8,18 +9,22 @@ export class Indent {
   }
 }
 
-export class DependencyTreeVisitor {
-  public serializer: Serializer<any> = new DefaultSerializer();
-
+export class Serializing implements Visitor<string> {
   private idnentForDependency: string = '+- ';
   private indentLastNodeOnLevel: string = '\\- ';
   private indentFillForParentNonLast = '|  ';
   private indentEmptyFill = '   ';
 
-  public visitTree(node: DependencyTreeNode<any>): string {
+  constructor(public serializer: Serializer<any> = new DefaultSerializer(), private jsonMode: boolean = false){}
+
+  public visitTree(rootNode: DependencyTreeNode<any>): string {
+    if(this.jsonMode){
+      this.jsonReady(rootNode);
+      return JSON.stringify(rootNode);
+    }
     let result: string = '';
-    result += this.visitNode(node) + '\n';
-    node.children.forEach(childNode => {
+    result += this.visitNode(rootNode) + '\n';
+    rootNode.children.forEach(childNode => {
       result += this.visitTree(childNode);
     });
     return result;
@@ -27,8 +32,12 @@ export class DependencyTreeVisitor {
   public visitNode(node: DependencyTreeNode<any>): string {
     let result: string = '';
     result += this.indentForNode(node).toString();
-    result += this.serializer.serialize(node.nodeElement);
+    result += this.serializer.serialize(node);
     return result;
+  }
+  private jsonReady(treeNode: DependencyTreeNode<any>): void{
+    treeNode.parent = null;
+    treeNode.children.forEach(child => this.jsonReady(child));
   }
 
   private indentForNode(node: DependencyTreeNode<any>): Indent {

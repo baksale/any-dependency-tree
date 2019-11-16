@@ -1,37 +1,39 @@
-import { Package } from "./lib/model";
-import { DependencyTreeNode } from "../src/dependencyTreeNode";
-import { TreeToListVisitor } from "../src/treeToListVisitor";
+import {DependencyTreeNode} from '../../src/dependencyTreeNode'
+import {Ordering} from '../../src/visitor/ordering'
 
-const visitor = new TreeToListVisitor<Package>();
+import {Package} from '../lib/model'
+
+const orderVisitor: Ordering = new Ordering();
 
 const topNodePackage = new Package('0', 'A');
 const l1p1 = new Package('1.1', '1st Level Dependency p#1');
 const l1p2 = new Package('1.2', '1st Level Dependency p#2');
-// const l2p1 = new Package('2.1', '2nd Level Dependency p#1');
 
 it('single node tree is to have single element list', () => {
     const singleNodeTree = new DependencyTreeNode<Package>(topNodePackage, null);
 
-    expect(visitor.visitTree(singleNodeTree)).toEqual([singleNodeTree]);
+    expect(orderVisitor.visitTree(singleNodeTree)).toEqual([singleNodeTree]);
 });
+
 it('children are earlier than parent', () => {
     const topNode = new DependencyTreeNode<Package>(topNodePackage, null);
     new DependencyTreeNode<Package>(l1p1, topNode);
     new DependencyTreeNode<Package>(l1p2, topNode);
 
-    const result = visitor.visitTree(topNode);
+    const result = orderVisitor.visitTree(topNode);
 
     expect(result.length).toEqual(3);
-    expect(result[2]).toEqual(topNode);
+    expect(result[result.length - 1]).toEqual(topNode);
 });
-it('root node can be excluded', () => {
-    const singleTestVisitor = new TreeToListVisitor(false);
+
+it('root node can be excluded from the list', () => {
+    const singleTestVisitor = new Ordering(false);
     const topNode = new DependencyTreeNode<Package>(topNodePackage, null);
     new DependencyTreeNode<Package>(l1p1, topNode);
-    const secondDependency = new DependencyTreeNode<Package>(l1p2, topNode);
+    const lastDependency = new DependencyTreeNode<Package>(l1p2, topNode);
 
     const result = singleTestVisitor.visitTree(topNode);
 
     expect(result.length).toEqual(2);
-    expect(result[1]).toEqual(secondDependency);
+    expect(result[result.length - 1]).toEqual(lastDependency);
 });
