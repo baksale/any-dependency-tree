@@ -1,4 +1,7 @@
 # Description
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/baksale/any-dependency-tree.svg)](https://greenkeeper.io/)
+
 Build and visualize dependency tree for any hierarchical structure.  
 Just implement *element => dependencies: element[]* [interface](./src/index.ts#EntityDependencyApi)  
 
