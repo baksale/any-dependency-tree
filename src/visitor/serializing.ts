@@ -15,18 +15,22 @@ export class Serializing implements Visitor<string> {
   private indentFillForParentNonLast = '|  ';
   private indentEmptyFill = '   ';
 
-  constructor(public serializer: Serializer<any> = new DefaultSerializer(),
-              private jsonMode: boolean = false,
-              private filter?: Filter<any>) {}
+  constructor(
+    public serializer: Serializer<any> = new DefaultSerializer(),
+    private jsonMode: boolean = false,
+    private filter?: Filter<any>,
+  ) {}
 
   public acceptNode(node: DependencyTreeNode<any>): boolean {
-        if(null !== this.filter){
-          return this.filter.accept(node)
-                  || node.children.some(childNode => {
-                    return this.acceptNode(childNode);
-                  });
-        }
-        return true; // always accept if no filters
+    if (null !== this.filter) {
+      return (
+        this.filter.accept(node) ||
+        node.children.some(childNode => {
+          return this.acceptNode(childNode);
+        })
+      );
+    }
+    return true; // always accept if no filters
   }
 
   public visitTree(rootNode: DependencyTreeNode<any>): string {
@@ -35,7 +39,7 @@ export class Serializing implements Visitor<string> {
       return JSON.stringify(rootNode);
     }
     let result: string = '';
-    if(this.acceptNode(rootNode)){
+    if (this.acceptNode(rootNode)) {
       result += this.visitNode(rootNode) + '\n';
       rootNode.children.forEach(childNode => {
         result += this.visitTree(childNode);
