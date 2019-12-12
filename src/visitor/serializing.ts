@@ -1,6 +1,6 @@
 import { Visitor } from '.';
 import { DependencyTreeNode } from '../dependencyTreeNode';
-import { DefaultSerializer, Filter, Serializer } from '../index';
+import { DefaultExcludeFilter, DefaultIncludeFilter, DefaultSerializer, Filter, Serializer } from '../index';
 
 export class Indent {
   public constructor(public indent: string = '', public parent: Indent = null) {}
@@ -9,35 +9,30 @@ export class Indent {
   }
 }
 
-export class Serializing implements Visitor<string> {
+export class SerializingVisitor implements Visitor<string> {
   private idnentForDependency: string = '+- ';
   private indentLastNodeOnLevel: string = '\\- ';
   private indentFillForParentNonLast = '|  ';
   private indentEmptyFill = '   ';
 
   constructor(
-    public serializer: Serializer<any> = new DefaultSerializer(),
-    private jsonMode: boolean = false,
-    private filter?: Filter<any>,
+    private serializer: Serializer<any> = new DefaultSerializer(),
+    private includeFilter: Filter<any> = new DefaultIncludeFilter(),
+    private excludeFilter: Filter<any> = new DefaultExcludeFilter(),
   ) {}
 
   public acceptNode(node: DependencyTreeNode<any>): boolean {
-    if (null !== this.filter) {
-      return (
-        this.filter.accept(node) ||
-        node.children.some(childNode => {
-          return this.acceptNode(childNode);
-        })
-      );
-    }
-    return true; // always accept if no filters
+    return (
+      !(this.excludeFilter && this.excludeFilter.accept(node)) &&
+      (this.includeFilter
+        ? this.includeFilter.accept(node) ||
+          node.children.some(childNode => {
+            return this.acceptNode(childNode);
+          })
+        : true)
+    );
   }
-
   public visitTree(rootNode: DependencyTreeNode<any>): string {
-    if (this.jsonMode) {
-      this.jsonReady(rootNode);
-      return JSON.stringify(rootNode);
-    }
     let result: string = '';
     if (this.acceptNode(rootNode)) {
       result += this.visitNode(rootNode) + '\n';
@@ -52,10 +47,6 @@ export class Serializing implements Visitor<string> {
     result += this.indentForNode(node).toString();
     result += this.serializer.serialize(node);
     return result;
-  }
-  private jsonReady(treeNode: DependencyTreeNode<any>): void {
-    treeNode.parent = null;
-    treeNode.children.forEach(child => this.jsonReady(child));
   }
 
   private indentForNode(node: DependencyTreeNode<any>): Indent {
@@ -73,6 +64,6 @@ export class Serializing implements Visitor<string> {
     }
   }
   private isLastOnLevel(node: DependencyTreeNode<any>): boolean {
-    return node.parent.children.indexOf(node) == node.parent.children.length - 1;
+    return node.nodeIndex == node.parent.children.length - 1;
   }
 }

@@ -1,9 +1,9 @@
 import {DependencyTreeNode} from '../../src/dependencyTreeNode'
-import {Ordering} from '../../src/visitor/ordering'
+import {OrderingVisitor} from '../../src/visitor/ordering'
 
 import {Package} from '../lib/model'
 
-const orderVisitor: Ordering = new Ordering();
+const orderVisitor = new OrderingVisitor();
 
 const topNodePackage = new Package('0', 'A');
 const l1p1 = new Package('1.1', '1st Level Dependency p#1');
@@ -27,7 +27,7 @@ it('children are earlier than parent', () => {
 });
 
 it('root node can be excluded from the list', () => {
-    const singleTestVisitor = new Ordering(false);
+    const singleTestVisitor = new OrderingVisitor(false);
     const topNode = new DependencyTreeNode<Package>(topNodePackage, null);
     new DependencyTreeNode<Package>(l1p1, topNode);
     const lastDependency = new DependencyTreeNode<Package>(l1p2, topNode);

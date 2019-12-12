@@ -1,10 +1,10 @@
 import { DependencyTreeNode } from "../../src/dependencyTreeNode";
 import { Filter } from "../../src/index";
-import { Serializing } from "../../src/visitor/serializing";
+import { SerializingVisitor } from "../../src/visitor/serializing";
 
-import { Package, PackageFilter, PackageSerializer} from '../lib/model'
+import { Package, PackageIncludeFilter, PackageSerializer, PackageExcludeFilter} from '../lib/model'
 
-const visitor: Serializing = new Serializing(new PackageSerializer());
+const visitor: SerializingVisitor = new SerializingVisitor(new PackageSerializer());
 const topNodePackage = new Package('0', 'A');
 const l1p1 = new Package('1.1', '1st Level Dependency p#1');
 const l1p2 = new Package('1.2', '1st Level Dependency p#2');
@@ -20,7 +20,7 @@ it('no indent for top level node, just display the node\'s internals', () => {
     expect(visitor.visitNode(singleNode)).toEqual(topNodePackage.name);
 });
 
-it('last dependency on the level indent to be "\\- "', () => {
+it('indent for last dependency on the level to be "\\- "', () => {
     const topNode = new DependencyTreeNode<Package>(topNodePackage, null);
     const d11 = new DependencyTreeNode<Package>(l1p1, topNode);
     const d12 = new DependencyTreeNode<Package>(l1p2, topNode);
@@ -30,7 +30,7 @@ it('last dependency on the level indent to be "\\- "', () => {
     expect(visitor.visitNode(d12)).toEqual(`\\- ${l1p2.name}`);
 });
 
-it('non-last dependency on the level indent to be "+- "', () => {
+it('indent for non-last dependency on the level to be "+- "', () => {
     const topNode = new DependencyTreeNode<Package>(topNodePackage, null);
     const d11 = new DependencyTreeNode<Package>(l1p1, topNode);
     new DependencyTreeNode<Package>(l1p2, topNode);// add one more to parent for the previous node to be non-last
@@ -38,11 +38,10 @@ it('non-last dependency on the level indent to be "+- "', () => {
     expect(visitor.visitNode(d11)).toEqual(`+- ${l1p1.name}`);
 });
 
-it('indent to be prefixd with "|  " if parent is non-last dependency', () => {
+it('indent to be prefixd with "|  " if parent is non-last dependency on its level', () => {
     const topNode = new DependencyTreeNode<Package>(topNodePackage, null);
     const d11 = new DependencyTreeNode<Package>(l1p1, topNode);
     const d21 = new DependencyTreeNode<Package>(l2p1, d11);
-    // tslint:disable-next-line: no-unused-expression
     new DependencyTreeNode<Package>(l1p2, topNode);// add one more to parent for the previous node to be non-last
 
     expect(visitor.visitNode(d21)).toEqual(`|  \\- ${l2p1.name}`);
@@ -89,20 +88,35 @@ it('display node if at least one branch satisfies filter', () => {
     const d11 = new DependencyTreeNode<Package>(l1p1, topNode);
     const d21 = new DependencyTreeNode<Package>(l2p1, d11);
 
-    const filter: Filter<Package> = new PackageFilter(d21.nodeElement.name);
-    const filteringVisitor: Serializing = new Serializing(new PackageSerializer(), false, filter);
+    const filter: Filter<Package> = new PackageIncludeFilter(d21.nodeElement.name);
+    const filteringVisitor: SerializingVisitor = new SerializingVisitor(new PackageSerializer(), filter);
     expect(filteringVisitor.acceptNode(topNode)).toEqual(true);
     expect(filteringVisitor.acceptNode(d11)).toEqual(true);
     expect(filteringVisitor.acceptNode(d21)).toEqual(true);
 });
-it('do not display node if np single branch satisfies filter', () => {
+it('do not display node if no single branch satisfies filter', () => {
     const topNode = new DependencyTreeNode<Package>(topNodePackage, null);
     const d11 = new DependencyTreeNode<Package>(l1p1, topNode);
     const d21 = new DependencyTreeNode<Package>(l2p1, d11);
 
-    const filter: Filter<Package> = new PackageFilter(topNode.nodeElement.name);
-    const filteringVisitor: Serializing = new Serializing(new PackageSerializer(), false, filter);
+    const filter: Filter<Package> = new PackageIncludeFilter(topNode.nodeElement.name);
+    const filteringVisitor: SerializingVisitor = new SerializingVisitor(new PackageSerializer(), filter);
+
     expect(filteringVisitor.acceptNode(topNode)).toEqual(true);
     expect(filteringVisitor.acceptNode(d11)).toEqual(false);
+    expect(filteringVisitor.acceptNode(d21)).toEqual(false);
+});
+it('do not display node if satisfies exclude filter', () => {
+    const topNode = new DependencyTreeNode<Package>(topNodePackage, null);
+    const d11 = new DependencyTreeNode<Package>(l1p1, topNode);
+    const d21 = new DependencyTreeNode<Package>(l2p1, d11);
+
+    const filteringVisitor: SerializingVisitor = new SerializingVisitor(
+        new PackageSerializer(), 
+        null, 
+        new PackageExcludeFilter(d21.nodeElement.name));
+
+    expect(filteringVisitor.acceptNode(topNode)).toEqual(true);
+    expect(filteringVisitor.acceptNode(d11)).toEqual(true);
     expect(filteringVisitor.acceptNode(d21)).toEqual(false);
 });

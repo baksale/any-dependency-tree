@@ -1,5 +1,5 @@
-import {DependencyTreeBuilder, EntityDependencyApi} from '../src/index'
 import { DependencyTreeNode } from '../src/dependencyTreeNode';
+import {DependencyTreeBuilder, EntityDependencyApi} from '../src/index'
 
 import {Package} from './lib/model'
 /**
@@ -13,7 +13,7 @@ import {Package} from './lib/model'
  */
 
 class MockDependencyApi implements EntityDependencyApi<Package>{
-    async getEntityDependencies(entity: Package): Promise<Package[]> {
+    public async getEntityDependencies(entity: Package): Promise<Package[]> {
         switch(entity.id){
             case '0': return [new Package('A', '1st Level Pacakge 1'), new Package('B', '1st Level Pacakge 2')];
             case 'A': return [new Package('C', '2nd Level Package 1'), new Package('D', '2nd Level Package 2'), new Package('E', '2nd Level Package 3')];

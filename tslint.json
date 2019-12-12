@@ -7,7 +7,8 @@
         "max-classes-per-file": false,
         "array-type": [true, "array"],
         "curly": [true, "ignore-same-line"],
-        "triple-equals": false
+        "triple-equals": false,
+        "no-unused-expression": false
     },
     "rulesDirectory": []
 }
