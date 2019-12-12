@@ -6,18 +6,28 @@ export interface EntityDependencyApi<T> {
 export interface Serializer<T> {
   serialize(element: DependencyTreeNode<T>): string;
 }
+export interface Filter<T> {
+  accept(element: DependencyTreeNode<T>): boolean;
+}
 export class DefaultSerializer<T> implements Serializer<T> {
   public serialize(element: DependencyTreeNode<T>): string {
     return JSON.stringify(element.nodeElement);
   }
 }
-export interface Filter<T> {
-  accept(element: DependencyTreeNode<T>): boolean;
+export class DefaultIncludeFilter<T> implements Filter<T> {
+  public accept(element: DependencyTreeNode<T>): boolean {
+    return true;
+  }
 }
-export class DependencyTreeBuilder<T> {
-  protected entityDependencyApi: EntityDependencyApi<T>;
+export class DefaultExcludeFilter<T> implements Filter<T> {
+  public accept(element: DependencyTreeNode<T>): boolean {
+    return false;
+  }
+}
 
-  constructor(entityDependencyApi: EntityDependencyApi<T>) {
+export class DependencyTreeBuilder<T> {
+
+  constructor(protected entityDependencyApi: EntityDependencyApi<T>) {
     this.entityDependencyApi = entityDependencyApi;
   }
   public async buildDependencyTree(entity: T): Promise<DependencyTreeNode<T>> {

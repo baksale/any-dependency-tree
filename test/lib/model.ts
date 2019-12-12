@@ -10,7 +10,13 @@ export class PackageSerializer implements Serializer<Package>{
     }
     
 }
-export class PackageFilter implements Filter<Package>{
+export class PackageIncludeFilter implements Filter<Package>{
+    constructor(private filter: string){};
+    public accept(element: DependencyTreeNode<Package>): boolean {
+        return element.nodeElement.name.indexOf(this.filter) >= 0;
+    }
+}
+export class PackageExcludeFilter implements Filter<Package>{
     constructor(private filter: string){};
     public accept(element: DependencyTreeNode<Package>): boolean {
         return element.nodeElement.name.indexOf(this.filter) >= 0;

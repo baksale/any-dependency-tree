@@ -1,7 +1,7 @@
 import { Visitor } from '.';
 import { DependencyTreeNode } from '../dependencyTreeNode';
 
-export class Ordering implements Visitor<DependencyTreeNode<any>[]> {
+export class OrderingVisitor implements Visitor<DependencyTreeNode<any>[]> {
   constructor(public withRootNode: boolean = true) {}
   public visitTree(topNode: DependencyTreeNode<any>): DependencyTreeNode<any>[] {
     const result: DependencyTreeNode<any>[] = [];
