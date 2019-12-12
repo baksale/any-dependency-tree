@@ -18,20 +18,18 @@ export class SerializingVisitor implements Visitor<string> {
   constructor(
     private serializer: Serializer<any> = new DefaultSerializer(),
     private includeFilter: Filter<any> = new DefaultIncludeFilter(),
-    private excludeFilter: Filter<any> = new DefaultExcludeFilter()
+    private excludeFilter: Filter<any> = new DefaultExcludeFilter(),
   ) {}
 
   public acceptNode(node: DependencyTreeNode<any>): boolean {
     return (
-      !(this.excludeFilter && this.excludeFilter.accept(node))
-      && (
-        this.includeFilter ? (
-          this.includeFilter.accept(node) ||
+      !(this.excludeFilter && this.excludeFilter.accept(node)) &&
+      (this.includeFilter
+        ? this.includeFilter.accept(node) ||
           node.children.some(childNode => {
             return this.acceptNode(childNode);
           })
-        ) : true
-      )
+        : true)
     );
   }
   public visitTree(rootNode: DependencyTreeNode<any>): string {

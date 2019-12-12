@@ -26,7 +26,6 @@ export class DefaultExcludeFilter<T> implements Filter<T> {
 }
 
 export class DependencyTreeBuilder<T> {
-
   constructor(protected entityDependencyApi: EntityDependencyApi<T>) {
     this.entityDependencyApi = entityDependencyApi;
   }
