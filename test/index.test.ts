@@ -35,3 +35,16 @@ it('builds dependency tree', async () => {
     expect(rootNode.children[0].nodeElement).toEqual(new Package('A', '1st Level Pacakge 1'));
     expect(rootNode.children[0].children.length).toEqual(3);
 });
+
+it('extend the tree from its leafs', async () => {
+    const existingTreeTopNode = new Package('Top Node', 'Existing Tree Top Package');
+    const rootNode = new DependencyTreeNode<Package>(existingTreeTopNode);
+    const existingTreeNode1 = new Package('0', 'Existing Tree 1st Level Node 1');
+    const firstLevelNode1 = new DependencyTreeNode<Package>(existingTreeNode1, rootNode);
+    const existingTreeNode2 = new Package('A', 'Existing Tree 1st Level Node 2');
+    const firstLevelNode2 = new DependencyTreeNode<Package>(existingTreeNode2, rootNode);
+    await dependencyTreeBuilder.extendTreeLeafs(rootNode);
+    expect(rootNode.children.length).toEqual(2);
+    expect(firstLevelNode1.children.length).toEqual(2);
+    expect(firstLevelNode2.children.length).toEqual(3);
+});

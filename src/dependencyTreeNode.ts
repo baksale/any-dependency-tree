@@ -3,7 +3,7 @@ export class DependencyTreeNode<T> {
   public nodeIndex: number = 0;
   constructor(
     public nodeElement: T,
-    public parent: DependencyTreeNode<T>,
+    public parent: DependencyTreeNode<T> = null,
     public children: DependencyTreeNode<T>[] = [],
   ) {
     if (null != parent) {

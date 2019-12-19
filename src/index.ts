@@ -29,18 +29,26 @@ export class DependencyTreeBuilder<T> {
   constructor(protected entityDependencyApi: EntityDependencyApi<T>) {
     this.entityDependencyApi = entityDependencyApi;
   }
-  public async buildDependencyTree(entity: T): Promise<DependencyTreeNode<T>> {
-    return await this.buildTreeWithRecursion(entity, null);
+  public async extendTreeLeafs(rootNode: DependencyTreeNode<T>) {
+      if(rootNode.children.length == 0){
+        await this.buildTreeWithRecursion(rootNode);
+      }
+      else{
+        for(const child of rootNode.children){
+          await this.extendTreeLeafs(child);
+        }
+      }
   }
-  private async buildTreeWithRecursion(entity: T, parent: DependencyTreeNode<T>): Promise<DependencyTreeNode<T>> {
-    const result = new DependencyTreeNode<T>(entity, parent);
-    const dependencies = await this.entityDependencyApi.getEntityDependencies(result.nodeElement);
-    const children: DependencyTreeNode<T>[] = [];
-    let dependency: T;
-    for (dependency of dependencies) {
-      children.push(await this.buildTreeWithRecursion(dependency, result));
-    }
-    result.children = children;
+  public async buildDependencyTree(entity: T): Promise<DependencyTreeNode<T>> {
+    const result = new DependencyTreeNode<T>(entity, null);
+    await this.buildTreeWithRecursion(result);
     return result;
+  }
+  private async buildTreeWithRecursion(entity: DependencyTreeNode<T>) {
+    const dependencies = await this.entityDependencyApi.getEntityDependencies(entity.nodeElement);
+    for (const dependency of dependencies) {
+      const childDependency = new DependencyTreeNode<T>(dependency, entity);
+      await this.buildTreeWithRecursion(childDependency);
+    }
   }
 }
