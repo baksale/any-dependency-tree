@@ -30,14 +30,13 @@ export class DependencyTreeBuilder<T> {
     this.entityDependencyApi = entityDependencyApi;
   }
   public async extendTreeLeafs(rootNode: DependencyTreeNode<T>) {
-      if(rootNode.children.length == 0){
-        await this.buildTreeWithRecursion(rootNode);
+    if (rootNode.children.length == 0) {
+      await this.buildTreeWithRecursion(rootNode);
+    } else {
+      for (const child of rootNode.children) {
+        await this.extendTreeLeafs(child);
       }
-      else{
-        for(const child of rootNode.children){
-          await this.extendTreeLeafs(child);
-        }
-      }
+    }
   }
   public async buildDependencyTree(entity: T): Promise<DependencyTreeNode<T>> {
     const result = new DependencyTreeNode<T>(entity, null);
