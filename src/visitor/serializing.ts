@@ -10,8 +10,8 @@ export class Indent {
 }
 
 export class SerializingVisitor implements Visitor<string> {
-  public idnentForDependency: string = '+- ';
-  public indentLastNodeOnLevel: string = '\\- ';
+  public static idnentForDependency: string = '+- ';
+  public static indentLastNodeOnLevel: string = '\\- ';
   private indentFillForParentNonLast = '|  ';
   private indentEmptyFill = '   ';
 
@@ -52,8 +52,8 @@ export class SerializingVisitor implements Visitor<string> {
   private indentForNode(node: DependencyTreeNode<any>): Indent {
     if (0 == node.nodeLevel) return new Indent(); // no any indent/formatting for top level node
     const parentIndent = this.indentForNodeForParentLevel(node.parent);
-    if (this.isLastOnLevel(node)) return new Indent(this.indentLastNodeOnLevel, parentIndent);
-    else return new Indent(this.idnentForDependency, parentIndent);
+    if (this.isLastOnLevel(node)) return new Indent(SerializingVisitor.indentLastNodeOnLevel, parentIndent);
+    else return new Indent(SerializingVisitor.idnentForDependency, parentIndent);
   }
   private indentForNodeForParentLevel(parentNode: DependencyTreeNode<any>): Indent {
     if (parentNode.nodeLevel == 0) return new Indent();
