@@ -10,8 +10,8 @@ export class Indent {
 }
 
 export class SerializingVisitor implements Visitor<string> {
-  private idnentForDependency: string = '+- ';
-  private indentLastNodeOnLevel: string = '\\- ';
+  public idnentForDependency: string = '+- ';
+  public indentLastNodeOnLevel: string = '\\- ';
   private indentFillForParentNonLast = '|  ';
   private indentEmptyFill = '   ';
 
