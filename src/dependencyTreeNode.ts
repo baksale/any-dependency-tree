@@ -2,7 +2,7 @@ export class DependencyTreeNode<T> {
   private static linkChildWithParent(child: DependencyTreeNode<any>, parent: DependencyTreeNode<any>): void {
     child.nodeLevel = parent.nodeLevel + 1;
     child.nodeIndex = parent.children.length;
-    child.parent.children.push(child);    
+    child.parent.children.push(child);
   }
   public nodeLevel: number = 0;
   public nodeIndex: number = 0;
